@@ -19,6 +19,8 @@ import IconButton from "@mui/material/IconButton"
 import LinearProgress from "@mui/material/LinearProgress"
 import Switch from "@mui/material/Switch"
 import Toolbar from "@mui/material/Toolbar"
+import { Link } from "react-router"
+import { Path } from "@/common/routing"
 
 export const Header = () => {
   const isLoggedIn = useAppSelector(selectIsLoggedIn)
@@ -57,8 +59,13 @@ export const Header = () => {
             <MenuIcon />
           </IconButton>
           <div>
-            {isLoggedIn && <NavButton onClick={logoutHandler}>Sign out</NavButton>}
-            <NavButton background={theme.palette.primary.dark}>Faq</NavButton>
+            <NavButton component={Link} to={Path.Main}>
+              Main
+            </NavButton>
+            {isLoggedIn && <NavButton onClick={logoutHandler}>Log out</NavButton>}
+            <NavButton component={Link} to={Path.Faq} background={theme.palette.primary.light}>
+              Faq
+            </NavButton>
             <Switch color={"default"} onChange={changeMode} />
           </div>
         </Container>
@@ -67,3 +74,6 @@ export const Header = () => {
     </AppBar>
   )
 }
+
+
+

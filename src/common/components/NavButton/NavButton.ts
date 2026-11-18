@@ -1,9 +1,15 @@
 import { styled } from "@mui/material/styles"
-import Button from "@mui/material/Button"
+import Button, { ButtonProps } from '@mui/material/Button'
+import { ElementType, ReactElement } from "react"
 
 type Props = {
   background?: string
 }
+
+// Объявляем полиморфный тип для компонента
+type NavButtonComponent = <C extends ElementType = 'button'>(
+  props: ButtonProps<C, { component?: C } & Props>
+) => ReactElement | null
 
 export const NavButton = styled(Button)<Props>(({ background, theme }) => ({
   minWidth: "110px",
@@ -15,4 +21,7 @@ export const NavButton = styled(Button)<Props>(({ background, theme }) => ({
   padding: "8px 24px",
   color: theme.palette.primary.contrastText,
   background: background || theme.palette.primary.light,
-}))
+})) as NavButtonComponent
+
+
+
