@@ -2,6 +2,7 @@ import { baseApi } from "@/app/baseApi"
 import { instance } from "@/common/instance"
 import type { ApiResource, BaseResponse } from "@/common/types"
 import type { DomainTask, GetTasksResponse, TaskAttributes, TasksData, UpdateTaskModel } from "./tasksApi.types"
+import { PAGE_SIZE } from "@/common/constants"
 
 export const toDomainTask = ({ id, attributes }: ApiResource<TaskAttributes>, todolistId: string): DomainTask => ({
   id,
@@ -11,13 +12,16 @@ export const toDomainTask = ({ id, attributes }: ApiResource<TaskAttributes>, to
 
 export const tasksApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
-    getTasks: build.query<TasksData, string>({
-      query: (todolistId) => ({ url: `boards/${todolistId}/tasks`, params: { pageSize: 20 } }),
-      transformResponse: (res: GetTasksResponse, _meta, todolistId): TasksData => ({
-        items: res.data.map((task) => toDomainTask(task, todolistId)),
-        totalCount: res.meta.totalCount,
+    getTasks: build.query<TasksData, { todolistId: string; params: { page: number} }>({
+      query: ({ todolistId, params }) => ({
+        url: `boards/${todolistId}/tasks`,
+        params: { pageNumber: params.page, pageSize: PAGE_SIZE },
       }),
-      providesTags: (_result, _error, todolistId) => {
+      transformResponse: (result: GetTasksResponse, _meta, { todolistId }): TasksData => ({
+        items: result.data.map((task) => toDomainTask(task, todolistId)),
+        totalCount: result.meta.totalCount,
+      }),
+      providesTags: (_result, _error, {todolistId}) => {
         return [{type: "Task", id: todolistId}]
       },
       // providesTags: (result, _error, todolistId) =>

@@ -12,7 +12,10 @@ export const baseApi = createApi({
         'api-key': import.meta.env.VITE_API_KEY,
       },
       prepareHeaders: (headers) => {
-        headers.set("Authorization", `Bearer ${localStorage.getItem(AUTH_TOKEN)}`)
+        const token = localStorage.getItem(AUTH_TOKEN)
+        if (token) {
+          headers.set("Authorization", `Bearer ${token}`)
+        }
       },
     })(args, api, extraOptions)
 
