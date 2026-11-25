@@ -1,7 +1,5 @@
 import { EditableSpan } from "@/common/components"
-import { useAppDispatch } from "@/common/hooks"
 import {
-  todolistsApi,
   useRemoveTodolistMutation,
   useUpdateTodolistTitleMutation,
 } from "@/features/todolists/api/todolistsApi"
@@ -20,22 +18,9 @@ export const TodolistTitle = ({ todolist }: Props) => {
   const [removeTodolist] = useRemoveTodolistMutation()
   const [updateTodolistTitle] = useUpdateTodolistTitleMutation()
 
-  const dispatch = useAppDispatch()
 
-  const deleteTodolist = async () => {
-    const patchResult = dispatch(
-      todolistsApi.util.updateQueryData("getTodolists", undefined, (state) => {
-        const index = state.findIndex((todolist) => todolist.id === id)
-        if (index !== -1) {
-          state.splice(index, 1)
-        }
-      }),
-    )
-    try {
-      await removeTodolist(id).unwrap()
-    } catch (e) {
-      patchResult.undo()
-    }
+  const deleteTodolist =  () => {
+    removeTodolist(id)
   }
 
   const changeTodolistTitle = (title: string) => {
