@@ -1,41 +1,27 @@
-import {
-  changeThemeModeAC,
-  selectAppStatus,
-  selectIsLoggedIn,
-  selectThemeMode,
-  setIsLoggedInAC,
-} from "@/app/app-slice.ts"
+import { selectAppStatus, selectIsLoggedIn, setIsLoggedInAC } from "@/app/app-slice.ts"
 import { baseApi } from "@/app/baseApi"
 import { NavButton } from "@/common/components/NavButton/NavButton"
 import { AUTH_TOKEN, REFRESH_TOKEN } from "@/common/constants"
 import { useAppDispatch, useAppSelector } from "@/common/hooks"
 import { containerSx } from "@/common/styles"
-import { getTheme } from "@/common/theme"
 import { useLogoutMutation } from "@/features/auth/api/authApi"
 import MenuIcon from "@mui/icons-material/Menu"
 import AppBar from "@mui/material/AppBar"
 import Container from "@mui/material/Container"
 import IconButton from "@mui/material/IconButton"
 import LinearProgress from "@mui/material/LinearProgress"
-import Switch from "@mui/material/Switch"
 import Toolbar from "@mui/material/Toolbar"
 import { Link } from "react-router"
 import { Path } from "@/common/routing"
+import { ThemeToggleButton } from "@/common/components/ThemeToggleButton/ThemeToggleButton.tsx"
 
 export const Header = () => {
   const isLoggedIn = useAppSelector(selectIsLoggedIn)
-  const themeMode = useAppSelector(selectThemeMode)
   const status = useAppSelector(selectAppStatus)
 
   const [logout] = useLogoutMutation()
 
   const dispatch = useAppDispatch()
-
-  const theme = getTheme(themeMode)
-
-  const changeMode = () => {
-    dispatch(changeThemeModeAC({ themeMode: themeMode === "light" ? "dark" : "light" }))
-  }
 
   const logoutHandler = () => {
     logout()
@@ -63,10 +49,10 @@ export const Header = () => {
               Main
             </NavButton>
             {isLoggedIn && <NavButton onClick={logoutHandler}>Log out</NavButton>}
-            <NavButton component={Link} to={Path.Faq} background={theme.palette.primary.light}>
+            <NavButton component={Link} to={Path.Faq} >
               Faq
             </NavButton>
-            <Switch color={"default"} onChange={changeMode} />
+            <ThemeToggleButton />
           </div>
         </Container>
       </Toolbar>

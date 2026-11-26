@@ -5,6 +5,8 @@ import { getTheme } from "@/common/theme"
 import { useLoginMutation } from "@/features/auth/api/authApi"
 import { type LoginInputs, loginSchema } from "@/features/auth/lib/schemas"
 import { zodResolver } from "@hookform/resolvers/zod"
+import Visibility from "@mui/icons-material/Visibility"
+import VisibilityOff from "@mui/icons-material/VisibilityOff"
 import Button from "@mui/material/Button"
 import Checkbox from "@mui/material/Checkbox"
 import FormControl from "@mui/material/FormControl"
@@ -12,11 +14,16 @@ import FormControlLabel from "@mui/material/FormControlLabel"
 import FormGroup from "@mui/material/FormGroup"
 import FormLabel from "@mui/material/FormLabel"
 import Grid from "@mui/material/Grid"
+import IconButton from "@mui/material/IconButton"
+import InputAdornment from "@mui/material/InputAdornment"
 import TextField from "@mui/material/TextField"
+import { useState } from "react"
 import { Controller, type SubmitHandler, useForm } from "react-hook-form"
 import styles from "./Login.module.css"
 
 export const Login = () => {
+  const [showPassword, setShowPassword] = useState(false)
+
   const themeMode = useAppSelector(selectThemeMode)
 
   const [login] = useLoginMutation()
@@ -69,11 +76,27 @@ export const Login = () => {
             <TextField label="Login" margin="normal" error={!!errors.login} {...register("login")} />
             {errors.login && <span className={styles.errorMessage}>{errors.login.message}</span>}
             <TextField
-              type="password"
+              type={showPassword ? "text" : "password"}
               label="Password"
               margin="normal"
-              error={!!errors.login}
+              error={!!errors.password}
               {...register("password")}
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        onMouseDown={(e) => e.preventDefault()}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                },
+              }}
             />
             {errors.password && <span className={styles.errorMessage}>{errors.password.message}</span>}
             <FormControlLabel

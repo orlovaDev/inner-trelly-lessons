@@ -40,7 +40,14 @@ export const TaskItem = ({ task, todolist }: Props) => {
         <Checkbox checked={isTaskCompleted} onChange={changeTaskStatus}  />
         <EditableSpan value={task.title} onChange={changeTaskTitle}  />
       </div>
-      <IconButton onClick={deleteTask} >
+      <IconButton
+        onClick={deleteTask}
+        sx={{
+          "&:hover": {
+            color: "error.main",
+          },
+        }}
+      >
         <DeleteIcon />
       </IconButton>
     </ListItem>
